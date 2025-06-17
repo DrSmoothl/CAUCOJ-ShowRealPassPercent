@@ -1,5 +1,5 @@
 import {
-    db, Handler, PRIV, Context, ValidationError,
+    db, Handler, PRIV, Context, ValidationError, UserModel,
 } from 'hydrooj';
 
 const coll = db.collection('real_pass_percent');
@@ -84,9 +84,8 @@ class RealPassPercentManageHandler extends Handler {
         
         const page = Math.max(1, parseInt(this.request.query.page as string) || 1);
         const limit = 50;
-        
-        const { docs, total } = await realPassPercentModel.getList(page, limit);
-        const updict = await this.user.getMulti(docs.map(doc => doc.updatedBy));
+          const { docs, total } = await realPassPercentModel.getList(page, limit);
+        const updict = await UserModel.getMulti(docs.map(doc => doc.updatedBy));
         
         this.response.template = 'real_pass_percent_manage.html';
         this.response.body = {
