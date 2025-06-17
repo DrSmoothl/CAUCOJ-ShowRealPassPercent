@@ -1,0 +1,133 @@
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="large-9 columns">
+    <div class="section">
+      <div class="section__header">
+        <h1 class="section__title">{{ _('Real Pass Percent Management') }}</h1>
+      </div>
+      <div class="section__body">
+        <div class="section__tab-container">
+          <div class="section__tab-main">
+            <!-- 添加新记录 -->
+            <div class="section__body">
+              <form method="post">
+                <div class="row">
+                  <div class="large-3 columns">
+                    <label class="inverse">{{ _('Problem ID') }}
+                      <input type="text" name="pid" placeholder="P1001" required>
+                    </label>
+                  </div>
+                  <div class="large-3 columns">
+                    <label class="inverse">{{ _('Pass Percent') }} (%)
+                      <input type="number" name="percent" step="0.01" min="0" max="100" placeholder="85.5" required>
+                    </label>
+                  </div>
+                  <div class="large-4 columns">
+                    <label class="inverse">{{ _('Contest Name') }}
+                      <input type="text" name="contestName" placeholder="Optional contest name">
+                    </label>
+                  </div>
+                  <div class="large-2 columns">
+                    <label class="inverse">&nbsp;
+                      <button type="submit" class="button expanded primary">{{ _('Add/Update') }}</button>
+                    </label>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- 记录列表 -->
+            <div class="section__body no-padding">
+              {% if docs.length %}
+                <table class="data-table">
+                  <colgroup>
+                    <col class="col--name">
+                    <col class="col--name">
+                    <col class="col--name">
+                    <col class="col--name">
+                    <col class="col--status">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th class="col--name">{{ _('Problem ID') }}</th>
+                      <th class="col--name">{{ _('Pass Percent') }}</th>
+                      <th class="col--name">{{ _('Contest Name') }}</th>
+                      <th class="col--name">{{ _('Updated By') }}</th>
+                      <th class="col--status">{{ _('Actions') }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for doc in docs %}
+                      <tr>
+                        <td class="col--name">{{ doc._id }}</td>
+                        <td class="col--name">{{ doc.percent }}%</td>
+                        <td class="col--name">{{ doc.contestName or '-' }}</td>
+                        <td class="col--name">
+                          {% if updict[doc.updatedBy] %}
+                            {{ updict[doc.updatedBy].uname }}
+                          {% else %}
+                            Unknown
+                          {% endif %}
+                        </td>
+                        <td class="col--status">
+                          <a href="{{ url('real_pass_percent_edit', pid=doc._id) }}" class="button small">{{ _('Edit') }}</a>
+                          <form method="post" style="display: inline-block; margin-left: 5px;">
+                            <input type="hidden" name="pid" value="{{ doc._id }}">
+                            <input type="hidden" name="operation" value="delete">
+                            <button type="submit" class="button small alert" onclick="return confirm('{{ _('Are you sure?') }}')">{{ _('Delete') }}</button>
+                          </form>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% else %}
+                <div class="section__body">
+                  <div class="typo">
+                    <p>{{ _('No records found.') }}</p>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- 分页 -->
+            {% if totalPages > 1 %}
+              <div class="section__body">
+                <nav class="pager">
+                  {% if currentPage > 1 %}
+                    <a href="?page={{ currentPage - 1 }}" class="pager__item button">{{ _('Previous') }}</a>
+                  {% endif %}
+                  
+                  <span class="pager__item">{{ _('Page') }} {{ currentPage }} / {{ totalPages }}</span>
+                  
+                  {% if currentPage < totalPages %}
+                    <a href="?page={{ currentPage + 1 }}" class="pager__item button">{{ _('Next') }}</a>
+                  {% endif %}
+                </nav>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="large-3 columns">
+    <div class="section side">
+      <div class="section__header">
+        <h1 class="section__title">{{ _('Help') }}</h1>
+      </div>
+      <div class="section__body typo">
+        <p>{{ _('Here you can manage the real pass percentages for problems during contests.') }}</p>
+        <ul>
+          <li>{{ _('Problem ID: The identifier of the problem (e.g., P1001)') }}</li>
+          <li>{{ _('Pass Percent: The percentage of participants who solved the problem during the contest (0-100)') }}</li>
+          <li>{{ _('Contest Name: Optional name of the contest where this percentage was recorded') }}</li>
+        </ul>
+        <p>{{ _('This data will be displayed in training detail pages.') }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

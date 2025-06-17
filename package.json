@@ -1,0 +1,11 @@
+{
+  "name": "CAUCOJ-ShowRealPassPercent",
+  "version": "1.0.0",
+  "description": "在题集详情显示场次赛时通过率",
+  "main": "index.ts",
+  "author": "MotricSeven",
+  "license": "MIT",
+  "devDependencies": {
+    "hydrooj": "^5.0.0-beta.3"
+  }
+}

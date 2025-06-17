@@ -1,0 +1,67 @@
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+  <div class="large-9 columns">
+    <div class="section">
+      <div class="section__header">
+        <h1 class="section__title">{{ _('Edit Real Pass Percent') }} - {{ pid }}</h1>
+      </div>
+      <div class="section__body">
+        <form method="post">
+          <div class="row">
+            <div class="large-6 columns">
+              <label class="inverse">{{ _('Problem ID') }}
+                <input type="text" value="{{ pid }}" disabled>
+                <small class="form-text">{{ _('Problem ID cannot be changed') }}</small>
+              </label>
+            </div>
+            <div class="large-6 columns">
+              <label class="inverse">{{ _('Pass Percent') }} (%)
+                <input type="number" name="percent" step="0.01" min="0" max="100" 
+                       value="{{ doc.percent if doc else '' }}" required>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label class="inverse">{{ _('Contest Name') }}
+                <input type="text" name="contestName" 
+                       value="{{ doc.contestName if doc else '' }}" 
+                       placeholder="Optional contest name">
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <button type="submit" class="button primary">{{ _('Save') }}</button>
+              <a href="{{ url('real_pass_percent_manage') }}" class="button secondary">{{ _('Cancel') }}</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="large-3 columns">
+    <div class="section side">
+      <div class="section__header">
+        <h1 class="section__title">{{ _('Information') }}</h1>
+      </div>
+      <div class="section__body typo">
+        {% if doc %}
+          <dl>
+            <dt>{{ _('Created At') }}</dt>
+            <dd>{{ doc.createdAt|date }}</dd>
+            <dt>{{ _('Updated At') }}</dt>
+            <dd>{{ doc.updatedAt|date }}</dd>
+            <dt>{{ _('Updated By') }}</dt>
+            <dd>{{ doc.updatedBy }}</dd>
+          </dl>
+        {% else %}
+          <p>{{ _('This is a new record for problem') }} {{ pid }}.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
