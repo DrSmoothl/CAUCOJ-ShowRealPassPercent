@@ -7,8 +7,7 @@
         <h1 class="section__title">{{ _('Edit Real Pass Percent') }} - {{ pid }}</h1>
       </div>
       <div class="section__body">
-        <form method="post">
-          <div class="row">
+        <form method="post">          <div class="row">
             <div class="large-6 columns">
               <label class="inverse">{{ _('Problem ID') }}
                 <input type="text" value="{{ pid }}" disabled>
@@ -19,15 +18,6 @@
               <label class="inverse">{{ _('Pass Percent') }} (%)
                 <input type="number" name="percent" step="0.01" min="0" max="100" 
                        value="{{ doc.percent if doc else '' }}" required>
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="large-12 columns">
-              <label class="inverse">{{ _('Contest Name') }}
-                <input type="text" name="contestName" 
-                       value="{{ doc.contestName if doc else '' }}" 
-                       placeholder="Optional contest name">
               </label>
             </div>
           </div>
@@ -47,13 +37,12 @@
       <div class="section__header">
         <h1 class="section__title">{{ _('Information') }}</h1>
       </div>
-      <div class="section__body typo">
-        {% if doc %}
+      <div class="section__body typo">        {% if doc %}
           <dl>
             <dt>{{ _('Created At') }}</dt>
-            <dd>{{ doc.createdAt|date }}</dd>
+            <dd>{{ datetimeSpan(doc.createdAt, false)|safe }}</dd>
             <dt>{{ _('Updated At') }}</dt>
-            <dd>{{ doc.updatedAt|date }}</dd>
+            <dd>{{ datetimeSpan(doc.updatedAt, false)|safe }}</dd>
             <dt>{{ _('Updated By') }}</dt>
             <dd>{{ doc.updatedBy }}</dd>
           </dl>

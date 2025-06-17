@@ -7,7 +7,6 @@ const coll = db.collection('real_pass_percent');
 interface RealPassPercent {
     _id: string; // 题目ID
     percent: number; // 赛时通过率 (0-100)
-    contestName?: string; // 比赛名称
     updatedBy: number; // 更新者ID
     updatedAt: Date; // 更新时间
     createdAt: Date; // 创建时间
@@ -23,14 +22,13 @@ declare module 'hydrooj' {
 }
 
 // 添加或更新题目的赛时通过率
-async function set(pid: string, percent: number, contestName: string, userId: number): Promise<void> {
+async function set(pid: string, percent: number, userId: number): Promise<void> {
     const now = new Date();
     await coll.updateOne(
         { _id: pid },
         {
             $set: {
                 percent,
-                contestName,
                 updatedBy: userId,
                 updatedAt: now,
             },
@@ -94,12 +92,10 @@ class RealPassPercentManageHandler extends Handler {
             totalPages: Math.ceil(total / limit),
             currentPage: page,
         };
-    }
-
-    async post() {
+    }    async post() {
         this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
 
-        const { pid, percent, contestName, operation } = this.request.body;
+        const { pid, percent, operation } = this.request.body;
 
         if (operation === 'delete') {
             await realPassPercentModel.remove(pid);
@@ -112,7 +108,7 @@ class RealPassPercentManageHandler extends Handler {
             throw new ValidationError('percent', 'Percent must be between 0 and 100');
         }
 
-        await realPassPercentModel.set(pid, percentNum, contestName || '', this.user._id);
+        await realPassPercentModel.set(pid, percentNum, this.user._id);
         this.response.redirect = this.url('real_pass_percent_manage');
     }
 }
@@ -126,20 +122,18 @@ class RealPassPercentEditHandler extends Handler {
         const doc = await realPassPercentModel.get(pid);
         this.response.template = 'real_pass_percent_edit.html';
         this.response.body = { pid, doc };
-    }
-
-    async post() {
+    }    async post() {
         this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
 
         const pid = this.request.params.pid;
-        const { percent, contestName } = this.request.body;
+        const { percent } = this.request.body;
 
         const percentNum = parseFloat(percent);
         if (isNaN(percentNum) || percentNum < 0 || percentNum > 100) {
             throw new ValidationError('percent', 'Percent must be between 0 and 100');
         }
 
-        await realPassPercentModel.set(pid, percentNum, contestName || '', this.user._id);
+        await realPassPercentModel.set(pid, percentNum, this.user._id);
         this.response.redirect = this.url('real_pass_percent_manage');
     }
 }

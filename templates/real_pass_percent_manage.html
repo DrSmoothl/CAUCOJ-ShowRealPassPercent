@@ -11,24 +11,18 @@
           <div class="section__tab-main">
             <!-- 添加新记录 -->
             <div class="section__body">
-              <form method="post">
-                <div class="row">
-                  <div class="large-3 columns">
+              <form method="post">                <div class="row">
+                  <div class="large-4 columns">
                     <label class="inverse">{{ _('Problem ID') }}
                       <input type="text" name="pid" placeholder="P1001" required>
                     </label>
                   </div>
-                  <div class="large-3 columns">
+                  <div class="large-4 columns">
                     <label class="inverse">{{ _('Pass Percent') }} (%)
                       <input type="number" name="percent" step="0.01" min="0" max="100" placeholder="85.5" required>
                     </label>
                   </div>
                   <div class="large-4 columns">
-                    <label class="inverse">{{ _('Contest Name') }}
-                      <input type="text" name="contestName" placeholder="Optional contest name">
-                    </label>
-                  </div>
-                  <div class="large-2 columns">
                     <label class="inverse">&nbsp;
                       <button type="submit" class="button expanded primary">{{ _('Add/Update') }}</button>
                     </label>
@@ -40,9 +34,7 @@
             <!-- 记录列表 -->
             <div class="section__body no-padding">
               {% if docs.length %}
-                <table class="data-table">
-                  <colgroup>
-                    <col class="col--name">
+                <table class="data-table">                  <colgroup>
                     <col class="col--name">
                     <col class="col--name">
                     <col class="col--name">
@@ -52,17 +44,14 @@
                     <tr>
                       <th class="col--name">{{ _('Problem ID') }}</th>
                       <th class="col--name">{{ _('Pass Percent') }}</th>
-                      <th class="col--name">{{ _('Contest Name') }}</th>
                       <th class="col--name">{{ _('Updated By') }}</th>
                       <th class="col--status">{{ _('Actions') }}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {% for doc in docs %}
-                      <tr>
+                    {% for doc in docs %}                      <tr>
                         <td class="col--name">{{ doc._id }}</td>
                         <td class="col--name">{{ doc.percent }}%</td>
-                        <td class="col--name">{{ doc.contestName or '-' }}</td>
                         <td class="col--name">
                           {% if updict[doc.updatedBy] %}
                             {{ updict[doc.updatedBy].uname }}
