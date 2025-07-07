@@ -172,62 +172,29 @@ class RealPassPercentDelHandler extends Handler {
 // API 处理器，用于获取赛时通过率数据
 class RealPassPercentApiHandler extends Handler {
     async get() {
+        // 添加权限检查 - 只要能查看训练就可以访问API
+        this.checkPerm(PERM.PERM_VIEW_TRAINING);
+        
         try {
-            console.log('RealPassPercentApiHandler.get called');
-            console.log('Full request object:', {
-                query: this.request.query,
-                params: this.request.params,
-                method: this.request.method,
-                path: this.request.path
-            });
-            
             // 获取 pids 参数
             const { pids } = this.request.query;
             
-            console.log('Final pids value:', pids, 'type:', typeof pids);
-            
             if (!pids || (Array.isArray(pids) && pids.length === 0)) {
-                console.log('No pids provided, returning empty object');
                 this.response.body = {};
                 return;
             }
             
             // 确保 pidArray 是字符串数组
             const pidArray = Array.isArray(pids) ? pids.map(String) : [String(pids)];
-            console.log('Processed pidArray:', pidArray);
             
             // 查询数据库
-            let realPassPercentDict = await realPassPercentModel.getMulti(pidArray);
-            console.log('Database query result:', realPassPercentDict);
-            
-            // 如果没有数据，创建一些测试数据
-            if (Object.keys(realPassPercentDict).length === 0) {
-                console.log('No data found in database, creating test data');
-                realPassPercentDict = {};
-                for (const pid of pidArray) {
-                    // 创建测试数据
-                    const testData = {
-                        _id: pid,
-                        accepted: Math.floor(Math.random() * 50) + 10,
-                        submitted: Math.floor(Math.random() * 100) + 50,
-                        updatedBy: 1,
-                        updatedAt: new Date(),
-                        createdAt: new Date()
-                    };
-                    realPassPercentDict[pid] = testData;
-                }
-                console.log('Generated test data:', realPassPercentDict);
-            }
+            const realPassPercentDict = await realPassPercentModel.getMulti(pidArray);
             
             this.response.body = realPassPercentDict;
         } catch (error) {
             console.error('Error in RealPassPercentApiHandler:', error);
             this.response.body = {
-                error: error.message || 'Internal server error',
-                debug: {
-                    query: this.request.query,
-                    stack: error.stack
-                }
+                error: error.message || 'Internal server error'
             };
         }
     }
@@ -238,5 +205,5 @@ export async function apply(ctx: Context) {
     ctx.Route('real_pass_percent_manage', '/real-pass-percent', RealPassPercentManageHandler, PERM.PERM_EDIT_HOMEWORK);
     ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PERM.PERM_EDIT_HOMEWORK);
     ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PERM.PERM_EDIT_HOMEWORK);
-    ctx.Route('real_pass_percent_api', '/api/real-pass-percent', RealPassPercentApiHandler);
+    ctx.Route('real_pass_percent_api', '/api/real-pass-percent', RealPassPercentApiHandler, PERM.PERM_VIEW_TRAINING);
 }
