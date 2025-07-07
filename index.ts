@@ -169,33 +169,27 @@ class RealPassPercentDelHandler extends Handler {
     }
 }
 
+// API 处理器，用于获取赛时通过率数据
+class RealPassPercentApiHandler extends Handler {
+    async get() {
+        const { pids } = this.request.query;
+        
+        if (!pids) {
+            this.response.body = {};
+            return;
+        }
+        
+        const pidArray = Array.isArray(pids) ? pids : [pids];
+        const realPassPercentDict = await realPassPercentModel.getMulti(pidArray);
+        
+        this.response.body = realPassPercentDict;
+    }
+}
+
 export async function apply(ctx: Context) {
     // 注册路由
     ctx.Route('real_pass_percent_manage', '/real-pass-percent', RealPassPercentManageHandler, PRIV.PRIV_CREATE_DOMAIN);
     ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PRIV.PRIV_CREATE_DOMAIN);
     ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PRIV.PRIV_CREATE_DOMAIN);
-    
-    // 监听训练详情页面的 training/get 事件，注入赛时通过率数据
-    ctx.on('training/get', async (tdoc, that) => {
-        console.log('Training/get event triggered');
-        console.log('tdoc:', tdoc);
-        console.log('that:', that);
-        
-        if (tdoc && tdoc.dag) {
-            const allPids: number[] = [];
-            for (const node of tdoc.dag) {
-                if (node.pids) {
-                    allPids.push(...node.pids);
-                }
-            }
-            
-            console.log('Found pids:', allPids);
-            
-            if (allPids.length > 0) {
-                const realPassPercentDict = await realPassPercentModel.getMulti(allPids.map(String));
-                console.log('Real pass percent dict:', realPassPercentDict);
-                that.realPassPercentDict = realPassPercentDict;
-            }
-        }
-    });
+    ctx.Route('real_pass_percent_api', '/api/real-pass-percent', RealPassPercentApiHandler);
 }

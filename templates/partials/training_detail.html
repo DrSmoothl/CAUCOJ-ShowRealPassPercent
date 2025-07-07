@@ -132,18 +132,8 @@
                     <td class="col--tried">{{ pdoc.nSubmit }}</td>
                     <td class="col--ac">{{ pdoc.nAccept }}</td>
                     <td class="col--difficulty">{{ pdoc['difficulty'] or lib.difficulty(pdoc.nSubmit, pdoc.nAccept) or _('(None)') }}</td>
-                    <td class="col--real-pass">
-                      {% if handler.realPassPercentDict %}
-                        {% if handler.realPassPercentDict[pid] %}
-                          <span class="real-pass-stats">
-                            {{ handler.realPassPercentDict[pid].accepted }}/{{ handler.realPassPercentDict[pid].submitted }}
-                          </span>
-                        {% else %}
-                          <span class="text-gray">-</span>
-                        {% endif %}
-                      {% else %}
-                        <span class="text-gray">-</span>
-                      {% endif %}
+                    <td class="col--real-pass" data-pid="{{ pid }}">
+                      <span class="text-gray">-</span>
                     </td>
                   </tr>
                 {% else %}
@@ -173,3 +163,45 @@
   {%- endfor -%}
   <div class="section__body">&nbsp;<!-- space placeholder --></div>
 </div>
+
+<script>
+// 动态加载赛时通过率数据
+document.addEventListener('DOMContentLoaded', function() {
+    // 收集所有题目ID
+    const pids = [];
+    document.querySelectorAll('td.col--real-pass[data-pid]').forEach(td => {
+        const pid = td.getAttribute('data-pid');
+        if (pid && pids.indexOf(pid) === -1) {
+            pids.push(pid);
+        }
+    });
+    
+    if (pids.length === 0) return;
+    
+    // 构建查询参数
+    const params = new URLSearchParams();
+    pids.forEach(pid => params.append('pids', pid));
+    
+    // 发送请求获取数据
+    fetch('/api/real-pass-percent?' + params.toString())
+        .then(response => response.json())
+        .then(data => {
+            // 更新页面上的数据
+            document.querySelectorAll('td.col--real-pass[data-pid]').forEach(td => {
+                const pid = td.getAttribute('data-pid');
+                if (data[pid]) {
+                    td.innerHTML = `<span class="real-pass-stats">${data[pid].accepted}/${data[pid].submitted}</span>`;
+                } else {
+                    td.innerHTML = '<span class="text-gray">-</span>';
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading real pass percent data:', error);
+            // 如果出错，保持显示 "-"
+            document.querySelectorAll('td.col--real-pass[data-pid]').forEach(td => {
+                td.innerHTML = '<span class="text-gray">-</span>';
+            });
+        });
+});
+</script>
