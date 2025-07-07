@@ -167,28 +167,60 @@
 <script>
 // 动态加载赛时通过率数据
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, starting to load real pass percent data');
+    
     // 收集所有题目ID
     const pids = [];
     document.querySelectorAll('td.col--real-pass[data-pid]').forEach(td => {
         const pid = td.getAttribute('data-pid');
+        console.log('Found pid:', pid);
         if (pid && pids.indexOf(pid) === -1) {
             pids.push(pid);
         }
     });
     
-    if (pids.length === 0) return;
+    console.log('All pids:', pids);
     
-    // 构建查询参数
+    if (pids.length === 0) {
+        console.log('No pids found, skipping API call');
+        return;
+    }
+    
+    // 构建查询参数 - 使用多个相同的参数名
     const params = new URLSearchParams();
-    pids.forEach(pid => params.append('pids', pid));
+    pids.forEach(pid => {
+        params.append('pids', pid);
+    });
+    
+    const url = '/api/real-pass-percent?' + params.toString();
+    console.log('API URL:', url);
     
     // 发送请求获取数据
-    fetch('/api/real-pass-percent?' + params.toString())
-        .then(response => response.json())
+    fetch(url)
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return response.json();
+        })
         .then(data => {
+            console.log('API response data:', data);
+            
+            // 检查是否有错误
+            if (data.error) {
+                console.error('API returned error:', data.error);
+                return;
+            }
+            
             // 更新页面上的数据
             document.querySelectorAll('td.col--real-pass[data-pid]').forEach(td => {
                 const pid = td.getAttribute('data-pid');
+                console.log('Updating pid:', pid, 'with data:', data[pid]);
+                
                 if (data[pid]) {
                     td.innerHTML = `<span class="real-pass-stats">${data[pid].accepted}/${data[pid].submitted}</span>`;
                 } else {
