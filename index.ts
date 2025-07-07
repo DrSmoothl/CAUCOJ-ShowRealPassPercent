@@ -235,8 +235,8 @@ class RealPassPercentApiHandler extends Handler {
 
 export async function apply(ctx: Context) {
     // 注册路由
-    ctx.Route('real_pass_percent_manage', '/real-pass-percent', RealPassPercentManageHandler, PRIV.PRIV_EDIT_SYSTEM);
-    ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PRIV.PRIV_EDIT_SYSTEM);
-    ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PRIV.PRIV_EDIT_SYSTEM);
+    ctx.Route('real_pass_percent_manage', '/real-pass-percent', RealPassPercentManageHandler, PERM.PERM_EDIT_HOMEWORK);
+    ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PERM.PERM_EDIT_HOMEWORK);
+    ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PERM.PERM_EDIT_HOMEWORK);
     ctx.Route('real_pass_percent_api', '/api/real-pass-percent', RealPassPercentApiHandler);
 }
