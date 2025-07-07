@@ -23,5 +23,8 @@
 'Submitted count must be a non-negative integer': '提交数必须是非负整数'
 'Accepted count cannot be greater than submitted count': '通过数不能大于提交数'
 'Problem ID is required': '题目编号是必填项'
+'Accepted Count': '通过数'
+'Submitted Count': '提交数'
+'This data will be displayed in training detail pages as "Accepted/Submitted" format.': '这些数据将在训练详情页面以“通过数/提交数”的格式显示。'
 real_pass_percent_manage: 赛时通过率管理
 real_pass_percent_edit: 编辑赛时通过率
