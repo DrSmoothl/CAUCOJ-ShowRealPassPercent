@@ -84,7 +84,7 @@
             <span class="icon icon-file"></span> {{ _('Files') }}
           </a></li>
         {% endif %}
-        {% if handler.user.hasPriv(PRIV.PRIV_CREATE_DOMAIN) %}
+        {% if handler.user.hasPerm(perm.PERM_EDIT_HOMEWORK) %}
           <li class="menu__item"><a class="menu__link" href="{{ url('real_pass_percent_manage') }}">
             <span class="icon icon-edit"></span> {{ _('Manage Real Pass Stats') }}
           </a></li>
