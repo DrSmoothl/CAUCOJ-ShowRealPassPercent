@@ -18,7 +18,6 @@
 'Previous': '上一页'
 'Next': '下一页'
 'Page': '第'
-'Here you can manage the real pass rates for problems during contests.': '在这里您可以管理题目的赛时通过率。'
 'Accepted count must be a non-negative integer': '通过数必须是非负整数'
 'Submitted count must be a non-negative integer': '提交数必须是非负整数'
 'Accepted count cannot be greater than submitted count': '通过数不能大于提交数'
@@ -26,5 +25,10 @@
 'Accepted Count': '通过数'
 'Submitted Count': '提交数'
 'This data will be displayed in training detail pages as "Accepted/Submitted" format.': '这些数据将在训练详情页面以“通过数/提交数”的格式显示。'
+'Real Pass Statistics Management': '赛时通过率统计管理'
+'Here you can manage the real pass statistics for problems during contests.': '在这里您可以管理题目的赛时通过率统计。'
+'Problem ID: The identifier of the problem (e.g., 1)': '题目编号：题目的ID（例如，1）可以在题目详情中看见。'
+'Accepted Count: The number of participants who solved the problem during the contest.': '通过数：在比赛中解决该题目的参与者数量。'
+'Submitted Count: The total number of submissions for the problem during the contest.': '提交数：在比赛中该题目的总提交次数。'
 real_pass_percent_manage: 赛时通过率管理
 real_pass_percent_edit: 编辑赛时通过率
