@@ -175,9 +175,37 @@ export async function apply(ctx: Context) {
     ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PRIV.PRIV_CREATE_DOMAIN);
     ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PRIV.PRIV_CREATE_DOMAIN);
     
+    // 尝试更多的事件监听器
+    ctx.on('handler/after/*', async (that) => {
+        // 检查这是否是训练详情页面
+        if (that.response && that.response.template === 'training_detail.html') {
+            console.log('Found training_detail.html template');
+            if (that.tdoc && that.tdoc.dag) {
+                const allPids: string[] = [];
+                for (const node of that.tdoc.dag) {
+                    if (node.pids) {
+                        allPids.push(...node.pids);
+                    }
+                }
+                
+                console.log('Found pids in after event:', allPids);
+                
+                if (allPids.length > 0) {
+                    const realPassPercentDict = await realPassPercentModel.getMulti(allPids);
+                    console.log('Real pass percent dict in after event:', realPassPercentDict);
+                    that.realPassPercentDict = realPassPercentDict;
+                    // 更新 response.body
+                    if (that.response.body) {
+                        that.response.body.realPassPercentDict = realPassPercentDict;
+                    }
+                }
+            }
+        }
+    });
+
     // 扩展训练详情页面，注入赛时通过率数据
     ctx.on('handler/before/TrainingDetailHandler#get', async (that) => {
-        console.log('TrainingDetailHandler event triggered');
+        console.log('TrainingDetailHandler#get event triggered');
         if (that.tdoc && that.tdoc.dag) {
             const allPids: string[] = [];
             for (const node of that.tdoc.dag) {
@@ -191,6 +219,42 @@ export async function apply(ctx: Context) {
             if (allPids.length > 0) {
                 const realPassPercentDict = await realPassPercentModel.getMulti(allPids);
                 console.log('Real pass percent dict:', realPassPercentDict);
+                that.realPassPercentDict = realPassPercentDict;
+            }
+        }
+    });
+
+    // 尝试其他可能的事件名称
+    ctx.on('handler/before/training#detail', async (that) => {
+        console.log('training#detail event triggered');
+        if (that.tdoc && that.tdoc.dag) {
+            const allPids: string[] = [];
+            for (const node of that.tdoc.dag) {
+                if (node.pids) {
+                    allPids.push(...node.pids);
+                }
+            }
+            
+            if (allPids.length > 0) {
+                const realPassPercentDict = await realPassPercentModel.getMulti(allPids);
+                that.realPassPercentDict = realPassPercentDict;
+            }
+        }
+    });
+
+    // 尝试训练详情页面可能的处理器名称
+    ctx.on('handler/before/TrainingHandler#detail', async (that) => {
+        console.log('TrainingHandler#detail event triggered');
+        if (that.tdoc && that.tdoc.dag) {
+            const allPids: string[] = [];
+            for (const node of that.tdoc.dag) {
+                if (node.pids) {
+                    allPids.push(...node.pids);
+                }
+            }
+            
+            if (allPids.length > 0) {
+                const realPassPercentDict = await realPassPercentModel.getMulti(allPids);
                 that.realPassPercentDict = realPassPercentDict;
             }
         }

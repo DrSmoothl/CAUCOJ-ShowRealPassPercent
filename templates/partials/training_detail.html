@@ -1,6 +1,8 @@
 {% import "components/record.html" as record with context %}
 {% import "components/problem.html" as problem with context %}
 {% set expanded = 0 %}
+<!-- Debug info -->
+<!-- handler.realPassPercentDict: {{ handler.realPassPercentDict }} -->
 <div data-fragment-id="training_detail">
   {% if handler.request.query.uid and handler.request.query.uid != handler.user._id %}
   <blockquote class="typo note">
