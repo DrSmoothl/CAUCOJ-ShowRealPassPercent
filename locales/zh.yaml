@@ -40,3 +40,4 @@ real_pass_percent_edit: 编辑赛时通过率
 'Once you delete this record, there is no going back. Please be certain.': '一旦删除此记录，将无法恢复。请确认您的操作。'
 'Delete This Record': '删除此记录'
 'Are you sure you want to delete this record? This action cannot be undone.': '确定要删除此记录吗？此操作无法撤销。'
+'Manage Real Pass Stats': '管理赛时通过率'

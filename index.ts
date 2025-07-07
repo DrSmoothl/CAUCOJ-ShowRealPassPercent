@@ -1,5 +1,5 @@
 import {
-    db, Handler, PRIV, Context, ValidationError, UserModel,
+    db, Handler, PRIV, Context, ValidationError, UserModel,PERM
 } from 'hydrooj';
 
 const coll = db.collection('real_pass_percent');
@@ -80,7 +80,7 @@ global.Hydro.model.realPassPercent = realPassPercentModel;
 // 管理界面处理器
 class RealPassPercentManageHandler extends Handler {
     async get() {
-        this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
+        this.checkPerm(PERM.PERM_EDIT_HOMEWORK);
         
         const page = Math.max(1, parseInt(this.request.query.page as string) || 1);
         const limit = 50;
@@ -95,7 +95,7 @@ class RealPassPercentManageHandler extends Handler {
             currentPage: page,
         };
     }    async post() {
-        this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
+        this.checkPerm(PERM.PERM_EDIT_HOMEWORK);
 
         const { pid, accepted, submitted } = this.request.body;
 
@@ -126,14 +126,14 @@ class RealPassPercentManageHandler extends Handler {
 // 编辑单个题目赛时通过率的处理器
 class RealPassPercentEditHandler extends Handler {
     async get() {
-        this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
+        this.checkPerm(PERM.PERM_EDIT_HOMEWORK);
         
         const { pid } = this.request.params;
         const doc = await realPassPercentModel.get(pid);
         this.response.template = 'real_pass_percent_edit.html';
         this.response.body = { pid, doc };
     }    async post() {
-        this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
+        this.checkPerm(PERM.PERM_EDIT_HOMEWORK);
 
         const { pid } = this.request.params;
         const { accepted, submitted } = this.request.body;
@@ -161,7 +161,7 @@ class RealPassPercentEditHandler extends Handler {
 // 删除处理器
 class RealPassPercentDelHandler extends Handler {
     async get() {
-        this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
+        this.checkPerm(PERM.PERM_EDIT_HOMEWORK);
         
         const { pid } = this.request.params;
         await realPassPercentModel.remove(pid);
@@ -235,8 +235,8 @@ class RealPassPercentApiHandler extends Handler {
 
 export async function apply(ctx: Context) {
     // 注册路由
-    ctx.Route('real_pass_percent_manage', '/real-pass-percent', RealPassPercentManageHandler, PRIV.PRIV_CREATE_DOMAIN);
-    ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PRIV.PRIV_CREATE_DOMAIN);
-    ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PRIV.PRIV_CREATE_DOMAIN);
+    ctx.Route('real_pass_percent_manage', '/real-pass-percent', RealPassPercentManageHandler, PRIV.PRIV_EDIT_SYSTEM);
+    ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PRIV.PRIV_EDIT_SYSTEM);
+    ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PRIV.PRIV_EDIT_SYSTEM);
     ctx.Route('real_pass_percent_api', '/api/real-pass-percent', RealPassPercentApiHandler);
 }
