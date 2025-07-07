@@ -131,10 +131,14 @@
                     <td class="col--ac">{{ pdoc.nAccept }}</td>
                     <td class="col--difficulty">{{ pdoc['difficulty'] or lib.difficulty(pdoc.nSubmit, pdoc.nAccept) or _('(None)') }}</td>
                     <td class="col--real-pass">
-                      {% if handler.realPassPercentDict and handler.realPassPercentDict[pid] %}
-                        <span class="real-pass-stats">
-                          {{ handler.realPassPercentDict[pid].accepted }}/{{ handler.realPassPercentDict[pid].submitted }}
-                        </span>
+                      {% if handler.realPassPercentDict %}
+                        {% if handler.realPassPercentDict[pid] %}
+                          <span class="real-pass-stats">
+                            {{ handler.realPassPercentDict[pid].accepted }}/{{ handler.realPassPercentDict[pid].submitted }}
+                          </span>
+                        {% else %}
+                          <span class="text-gray">-</span>
+                        {% endif %}
                       {% else %}
                         <span class="text-gray">-</span>
                       {% endif %}

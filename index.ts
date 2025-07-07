@@ -177,6 +177,7 @@ export async function apply(ctx: Context) {
     
     // 扩展训练详情页面，注入赛时通过率数据
     ctx.on('handler/before/TrainingDetailHandler#get', async (that) => {
+        console.log('TrainingDetailHandler event triggered');
         if (that.tdoc && that.tdoc.dag) {
             const allPids: string[] = [];
             for (const node of that.tdoc.dag) {
@@ -185,8 +186,11 @@ export async function apply(ctx: Context) {
                 }
             }
             
+            console.log('Found pids:', allPids);
+            
             if (allPids.length > 0) {
                 const realPassPercentDict = await realPassPercentModel.getMulti(allPids);
+                console.log('Real pass percent dict:', realPassPercentDict);
                 that.realPassPercentDict = realPassPercentDict;
             }
         }
