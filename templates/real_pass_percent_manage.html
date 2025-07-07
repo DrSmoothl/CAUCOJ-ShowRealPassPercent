@@ -1,4 +1,22 @@
 {% extends "layout/basic.html" %}
+
+{% block head %}
+<style>
+.button.alert {
+  background-color: #e74c3c !important;
+  color: white !important;
+  border-color: #e74c3c !important;
+}
+.button.alert:hover {
+  background-color: #c0392b !important;
+  border-color: #c0392b !important;
+}
+.col--status .button {
+  margin-right: 5px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
   <div class="large-9 columns">
@@ -71,7 +89,7 @@
                         </td>
                         <td class="col--status">
                           <a href="{{ url('real_pass_percent_edit', pid=doc._id) }}" class="button small">{{ _('Edit') }}</a>
-                          <a href="{{ url('real_pass_percent_del', pid=doc._id) }}" class="button small alert" onclick="return confirm('确定要删除吗？')">{{ _('Delete') }}</a>
+                          <a href="{{ url('real_pass_percent_del', pid=doc._id) }}" class="button small alert" onclick="return confirm('{{ _('Are you sure?') }}')">{{ _('Delete') }}</a>
                         </td>
                       </tr>
                     {% endfor %}
