@@ -1,33 +1,27 @@
-# Real Pass Percent Plugin - Chinese Localization
-
-Real Pass Percent Management: "赛时通过率管理"
-Edit Real Pass Percent: "编辑赛时通过率"
-Problem ID: "题目编号"
-Pass Percent: "通过率"
-Contest Name: "比赛名称"
-"Updated By": "更新者"
-"Actions": "操作"
-"Add/Update": "添加/更新"
-"Edit": "编辑"
-"Delete": "删除"
-"Save": "保存"
-"Cancel": "取消"
-"Are you sure?": "确定要删除吗？"
-"No records found.": "没有找到记录。"
-"Help": "帮助"
-"Information": "信息"
-"Created At": "创建时间"
-"Updated At": "更新时间"
-"Previous": "上一页"
-"Next": "下一页"
-"Page": "第"
-"Real Pass %": "赛时通过率"
-"Here you can manage the real pass percentages for problems during contests.": "在这里您可以管理题目的赛时通过率。"
-"Problem ID help": "题目编号：题目的标识符（例如：P1001）"
-"Pass Percent help": "通过率：比赛期间解决该题目的参与者百分比（0-100）"
-"Contest Name help": "比赛名称：记录此百分比的比赛名称（可选）"
-"This data will be displayed in training detail pages.": "这些数据将在训练详情页面中显示。"
-"Problem ID cannot be changed": "题目编号不能修改"
-"Optional contest name": "可选的比赛名称"
-"This is a new record for problem": "这是题目的新记录"
-"Percent must be between 0 and 100": "百分比必须在0到100之间"
+'Real Pass Percent Management': '赛时通过率管理'
+'Edit Real Pass Percent': '编辑赛时通过率'
+'Problem ID': '题目编号'
+'Accepted': '通过数'
+'Submitted': '提交数'
+'Real Pass': '赛时通过率'
+'Updated By': '更新者'
+'Actions': '操作'
+'Add/Update': '添加/更新'
+'Edit': '编辑'
+'Delete': '删除'
+'Save': '保存'
+'Cancel': '取消'
+'Are you sure?': '确定要删除吗？'
+'No records found.': '没有找到记录。'
+'Created At': '创建时间'
+'Updated At': '更新时间'
+'Previous': '上一页'
+'Next': '下一页'
+'Page': '第'
+'Here you can manage the real pass rates for problems during contests.': '在这里您可以管理题目的赛时通过率。'
+'Accepted count must be a non-negative integer': '通过数必须是非负整数'
+'Submitted count must be a non-negative integer': '提交数必须是非负整数'
+'Accepted count cannot be greater than submitted count': '通过数不能大于提交数'
+'Problem ID is required': '题目编号是必填项'
+real_pass_percent_manage: 赛时通过率管理
+real_pass_percent_edit: 编辑赛时通过率
