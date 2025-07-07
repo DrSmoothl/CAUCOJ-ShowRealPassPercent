@@ -11,7 +11,9 @@
           <div class="section__tab-main">
             <!-- 添加新记录 -->
             <div class="section__body">
-              <form method="post">                <div class="row">
+              <form method="post">
+                {{ handler.renderCSRF() | safe }}
+                <div class="row">
                   <div class="large-3 columns">
                     <label class="inverse">{{ _('Problem ID') }}
                       <input type="text" name="pid" placeholder="P1001" required>
@@ -39,7 +41,8 @@
             <!-- 记录列表 -->
             <div class="section__body no-padding">
               {% if docs.length %}
-                <table class="data-table">                  <colgroup>
+                <table class="data-table">                  
+                  <colgroup>
                     <col class="col--name">
                     <col class="col--name">
                     <col class="col--name">
@@ -69,11 +72,7 @@
                         </td>
                         <td class="col--status">
                           <a href="{{ url('real_pass_percent_edit', pid=doc._id) }}" class="button small">{{ _('Edit') }}</a>
-                          <form method="post" style="display: inline-block; margin-left: 5px;">
-                            <input type="hidden" name="pid" value="{{ doc._id }}">
-                            <input type="hidden" name="operation" value="delete">
-                            <button type="submit" class="button small alert" onclick="return confirm('{{ _('Are you sure?') }}')">{{ _('Delete') }}</button>
-                          </form>
+                          <a href="{{ url('real_pass_percent_del', pid=doc._id) }}" class="button small alert" onclick="return confirm('确定要删除吗？')">{{ _('Delete') }}</a>
                         </td>
                       </tr>
                     {% endfor %}

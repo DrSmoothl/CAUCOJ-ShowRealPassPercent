@@ -97,13 +97,7 @@ class RealPassPercentManageHandler extends Handler {
     }    async post() {
         this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
 
-        const { pid, accepted, submitted, operation } = this.request.body;
-
-        if (operation === 'delete') {
-            await realPassPercentModel.remove(pid);
-            this.response.redirect = this.url('real_pass_percent_manage');
-            return;
-        }
+        const { pid, accepted, submitted } = this.request.body;
 
         if (!pid || pid.trim() === '') {
             throw new ValidationError('pid', 'Problem ID is required');
@@ -164,10 +158,22 @@ class RealPassPercentEditHandler extends Handler {
     }
 }
 
+// 删除处理器
+class RealPassPercentDelHandler extends Handler {
+    async get() {
+        this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
+        
+        const { pid } = this.request.params;
+        await realPassPercentModel.remove(pid);
+        this.response.redirect = this.url('real_pass_percent_manage');
+    }
+}
+
 export async function apply(ctx: Context) {
     // 注册路由
     ctx.Route('real_pass_percent_manage', '/real-pass-percent', RealPassPercentManageHandler, PRIV.PRIV_CREATE_DOMAIN);
     ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PRIV.PRIV_CREATE_DOMAIN);
+    ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PRIV.PRIV_CREATE_DOMAIN);
     
     // 扩展训练详情页面，注入赛时通过率数据
     ctx.on('handler/before/TrainingDetailHandler#get', async (that) => {
