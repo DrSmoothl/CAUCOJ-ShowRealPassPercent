@@ -6,7 +6,8 @@ const coll = db.collection('real_pass_percent');
 
 interface RealPassPercent {
     _id: string; // 题目ID
-    percent: number; // 赛时通过率 (0-100)
+    accepted: number; // 通过数
+    submitted: number; // 提交数
     updatedBy: number; // 更新者ID
     updatedAt: Date; // 更新时间
     createdAt: Date; // 创建时间
@@ -22,13 +23,14 @@ declare module 'hydrooj' {
 }
 
 // 添加或更新题目的赛时通过率
-async function set(pid: string, percent: number, userId: number): Promise<void> {
+async function set(pid: string, accepted: number, submitted: number, userId: number): Promise<void> {
     const now = new Date();
     await coll.updateOne(
         { _id: pid },
         {
             $set: {
-                percent,
+                accepted,
+                submitted,
                 updatedBy: userId,
                 updatedAt: now,
             },
@@ -95,7 +97,7 @@ class RealPassPercentManageHandler extends Handler {
     }    async post() {
         this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
 
-        const { pid, percent, operation } = this.request.body;
+        const { pid, accepted, submitted, operation } = this.request.body;
 
         if (operation === 'delete') {
             await realPassPercentModel.remove(pid);
@@ -103,12 +105,26 @@ class RealPassPercentManageHandler extends Handler {
             return;
         }
 
-        const percentNum = parseFloat(percent);
-        if (isNaN(percentNum) || percentNum < 0 || percentNum > 100) {
-            throw new ValidationError('percent', 'Percent must be between 0 and 100');
+        if (!pid || pid.trim() === '') {
+            throw new ValidationError('pid', 'Problem ID is required');
         }
 
-        await realPassPercentModel.set(pid, percentNum, this.user._id);
+        const acceptedNum = parseInt(accepted, 10);
+        const submittedNum = parseInt(submitted, 10);
+        
+        if (isNaN(acceptedNum) || acceptedNum < 0) {
+            throw new ValidationError('accepted', 'Accepted count must be a non-negative integer');
+        }
+        
+        if (isNaN(submittedNum) || submittedNum < 0) {
+            throw new ValidationError('submitted', 'Submitted count must be a non-negative integer');
+        }
+        
+        if (acceptedNum > submittedNum) {
+            throw new ValidationError('accepted', 'Accepted count cannot be greater than submitted count');
+        }
+
+        await realPassPercentModel.set(pid.trim(), acceptedNum, submittedNum, this.user._id);
         this.response.redirect = this.url('real_pass_percent_manage');
     }
 }
@@ -118,22 +134,32 @@ class RealPassPercentEditHandler extends Handler {
     async get() {
         this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
         
-        const pid = this.request.params.pid;
+        const { pid } = this.request.params;
         const doc = await realPassPercentModel.get(pid);
         this.response.template = 'real_pass_percent_edit.html';
         this.response.body = { pid, doc };
     }    async post() {
         this.checkPriv(PRIV.PRIV_CREATE_DOMAIN);
 
-        const pid = this.request.params.pid;
-        const { percent } = this.request.body;
+        const { pid } = this.request.params;
+        const { accepted, submitted } = this.request.body;
 
-        const percentNum = parseFloat(percent);
-        if (isNaN(percentNum) || percentNum < 0 || percentNum > 100) {
-            throw new ValidationError('percent', 'Percent must be between 0 and 100');
+        const acceptedNum = parseInt(accepted, 10);
+        const submittedNum = parseInt(submitted, 10);
+        
+        if (isNaN(acceptedNum) || acceptedNum < 0) {
+            throw new ValidationError('accepted', 'Accepted count must be a non-negative integer');
+        }
+        
+        if (isNaN(submittedNum) || submittedNum < 0) {
+            throw new ValidationError('submitted', 'Submitted count must be a non-negative integer');
+        }
+        
+        if (acceptedNum > submittedNum) {
+            throw new ValidationError('accepted', 'Accepted count cannot be greater than submitted count');
         }
 
-        await realPassPercentModel.set(pid, percentNum, this.user._id);
+        await realPassPercentModel.set(pid, acceptedNum, submittedNum, this.user._id);
         this.response.redirect = this.url('real_pass_percent_manage');
     }
 }

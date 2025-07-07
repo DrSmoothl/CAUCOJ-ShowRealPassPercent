@@ -4,7 +4,7 @@
   <div class="large-9 columns">
     <div class="section">
       <div class="section__header">
-        <h1 class="section__title">{{ _('Real Pass Percent Management') }}</h1>
+        <h1 class="section__title">{{ _('Real Pass Statistics Management') }}</h1>
       </div>
       <div class="section__body">
         <div class="section__tab-container">
@@ -12,17 +12,22 @@
             <!-- 添加新记录 -->
             <div class="section__body">
               <form method="post">                <div class="row">
-                  <div class="large-4 columns">
+                  <div class="large-3 columns">
                     <label class="inverse">{{ _('Problem ID') }}
                       <input type="text" name="pid" placeholder="P1001" required>
                     </label>
                   </div>
-                  <div class="large-4 columns">
-                    <label class="inverse">{{ _('Pass Percent') }} (%)
-                      <input type="number" name="percent" step="0.01" min="0" max="100" placeholder="85.5" required>
+                  <div class="large-3 columns">
+                    <label class="inverse">{{ _('Accepted Count') }}
+                      <input type="number" name="accepted" min="0" placeholder="85" required>
                     </label>
                   </div>
-                  <div class="large-4 columns">
+                  <div class="large-3 columns">
+                    <label class="inverse">{{ _('Submitted Count') }}
+                      <input type="number" name="submitted" min="0" placeholder="100" required>
+                    </label>
+                  </div>
+                  <div class="large-3 columns">
                     <label class="inverse">&nbsp;
                       <button type="submit" class="button expanded primary">{{ _('Add/Update') }}</button>
                     </label>
@@ -38,12 +43,14 @@
                     <col class="col--name">
                     <col class="col--name">
                     <col class="col--name">
+                    <col class="col--name">
                     <col class="col--status">
                   </colgroup>
                   <thead>
                     <tr>
                       <th class="col--name">{{ _('Problem ID') }}</th>
-                      <th class="col--name">{{ _('Pass Percent') }}</th>
+                      <th class="col--name">{{ _('Accepted') }}</th>
+                      <th class="col--name">{{ _('Submitted') }}</th>
                       <th class="col--name">{{ _('Updated By') }}</th>
                       <th class="col--status">{{ _('Actions') }}</th>
                     </tr>
@@ -51,7 +58,8 @@
                   <tbody>
                     {% for doc in docs %}                      <tr>
                         <td class="col--name">{{ doc._id }}</td>
-                        <td class="col--name">{{ doc.percent }}%</td>
+                        <td class="col--name">{{ doc.accepted }}</td>
+                        <td class="col--name">{{ doc.submitted }}</td>
                         <td class="col--name">
                           {% if updict[doc.updatedBy] %}
                             {{ updict[doc.updatedBy].uname }}
@@ -108,13 +116,13 @@
         <h1 class="section__title">{{ _('Help') }}</h1>
       </div>
       <div class="section__body typo">
-        <p>{{ _('Here you can manage the real pass percentages for problems during contests.') }}</p>
+        <p>{{ _('Here you can manage the real pass statistics for problems during contests.') }}</p>
         <ul>
           <li>{{ _('Problem ID: The identifier of the problem (e.g., P1001)') }}</li>
-          <li>{{ _('Pass Percent: The percentage of participants who solved the problem during the contest (0-100)') }}</li>
-          <li>{{ _('Contest Name: Optional name of the contest where this percentage was recorded') }}</li>
+          <li>{{ _('Accepted Count: The number of participants who solved the problem during the contest') }}</li>
+          <li>{{ _('Submitted Count: The total number of submissions for the problem during the contest') }}</li>
         </ul>
-        <p>{{ _('This data will be displayed in training detail pages.') }}</p>
+        <p>{{ _('This data will be displayed in training detail pages as "Accepted/Submitted" format.') }}</p>
       </div>
     </div>
   </div>
