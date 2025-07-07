@@ -205,5 +205,5 @@ export async function apply(ctx: Context) {
     ctx.Route('real_pass_percent_manage', '/real-pass-percent', RealPassPercentManageHandler, PERM.PERM_EDIT_HOMEWORK);
     ctx.Route('real_pass_percent_edit', '/real-pass-percent/:pid', RealPassPercentEditHandler, PERM.PERM_EDIT_HOMEWORK);
     ctx.Route('real_pass_percent_del', '/real-pass-percent/:pid/del', RealPassPercentDelHandler, PERM.PERM_EDIT_HOMEWORK);
-    ctx.Route('real_pass_percent_api', '/api/real-pass-percent', RealPassPercentApiHandler, PERM.PERM_VIEW_TRAINING);
+    ctx.Route('real_pass_percent_api', '/real-pass-percent/api/real-pass-percent', RealPassPercentApiHandler, PERM.PERM_VIEW_TRAINING);
 }
