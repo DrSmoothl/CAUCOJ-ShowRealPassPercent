@@ -64,7 +64,7 @@
                     <col class="col--name">
                     <col class="col--name">
                     <col class="col--name">
-                    <col style="width: 160px;">
+                    <col class="col--status">
                   </colgroup>
                   <thead>
                     <tr>
@@ -72,7 +72,7 @@
                       <th class="col--name">{{ _('Accepted') }}</th>
                       <th class="col--name">{{ _('Submitted') }}</th>
                       <th class="col--name">{{ _('Updated By') }}</th>
-                      <th style="width: 160px; text-align: center;">{{ _('Actions') }}</th>
+                      <th class="col--status">{{ _('Actions') }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -87,9 +87,8 @@
                             Unknown
                           {% endif %}
                         </td>
-                        <td style="width: 160px; text-align: center;">
+                        <td class="col--status">
                           <a href="{{ url('real_pass_percent_edit', pid=doc._id) }}" class="button small">{{ _('Edit') }}</a>
-                          <a href="{{ url('real_pass_percent_del', pid=doc._id) }}" class="button small alert" onclick="return confirm('{{ _('Are you sure?') }}')">{{ _('Delete') }}</a>
                         </td>
                       </tr>
                     {% endfor %}

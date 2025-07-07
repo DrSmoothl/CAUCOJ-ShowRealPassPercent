@@ -1,4 +1,30 @@
 {% extends "layout/basic.html" %}
+
+{% block head %}
+<style>
+.button.alert {
+  background-color: #e74c3c !important;
+  color: white !important;
+  border-color: #e74c3c !important;
+}
+.button.alert:hover {
+  background-color: #c0392b !important;
+  border-color: #c0392b !important;
+}
+.danger-zone {
+  border: 2px solid #e74c3c;
+  border-radius: 4px;
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #fdf2f2;
+}
+.danger-zone h3 {
+  color: #e74c3c;
+  margin-top: 0;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
   <div class="large-9 columns">
@@ -35,6 +61,19 @@
             </div>
           </div>
         </form>
+        
+        {% if doc %}
+        <!-- 危险操作区域 -->
+        <div class="danger-zone">
+          <h3>{{ _('Danger Zone') }}</h3>
+          <p>{{ _('Once you delete this record, there is no going back. Please be certain.') }}</p>
+          <a href="{{ url('real_pass_percent_del', pid=pid) }}" 
+             class="button small alert" 
+             onclick="return confirm('{{ _('Are you sure you want to delete this record? This action cannot be undone.') }}')">
+            {{ _('Delete This Record') }}
+          </a>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -44,7 +83,8 @@
       <div class="section__header">
         <h1 class="section__title">{{ _('Information') }}</h1>
       </div>
-      <div class="section__body typo">        {% if doc %}
+      <div class="section__body typo">        
+        {% if doc %}
           <dl>
             <dt>{{ _('Created At') }}</dt>
             <dd>{{ datetimeSpan(doc.createdAt, false)|safe }}</dd>
